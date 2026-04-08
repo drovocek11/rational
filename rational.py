@@ -70,12 +70,11 @@ def power(r:Rational, power:int):
 def compare(a:Rational, b:Rational):
     if a is None or b is None:
         return None
-    a.numer *= b.denom
-    b.numer *= a.denom
-    if a.numer > b.numer:
+    numer1 = a.numer * b.denom
+    numer2 = b.numer * a.denom
+    if numer1 > numer2:
         return 1
-    elif a.numer < b.numer:
+    elif numer1 < numer2:
         return -1
-    else:
-        return 0
+    return 0
 
