@@ -1,16 +1,4 @@
-def nod(a, b):
-    while a:
-        b, a = a, b % a
-    return abs(b)
-
-def canonize(numer: int, denom: int) -> tuple:
-    n = nod(numer, denom)
-    numer /= n
-    denom /= n
-    if denom < 0:
-        denom = -denom
-        numer = -numer
-    return numer, denom
+from secondary_funcs import canonize
 
 class Rational:
     pass
@@ -23,8 +11,8 @@ def create(numer:int, denom:int):
     return res
 
 def to_str(r:Rational):
-    if not r:
-        return "None"
+    if r is None:
+        return None
     first_part = str(int(r.numer))
     second_part = str(int(r.denom))
     if first_part == "0" or second_part == "1":
@@ -33,77 +21,54 @@ def to_str(r:Rational):
     return string
 
 def to_float(r:Rational):
-    if not r:
+    if r is None:
         return
     res = round(r.numer / r.denom, 3)
     return res
 
 def to_int(r:Rational):
-    if not r:
+    if r is None:
         return None
-    if r.numer < 0:
-        r.numer = -r.numer
-        return -(r.numer // r.denom)
-    return r.numer // r.denom
+    res = create(r.numer, r.denom)
+    if res.numer < 0:
+        res.numer = -res.numer
+        return -(res.numer // res.denom)
+    return res.numer // res.denom
 
 def add(a:Rational, b:Rational):
-    if not a or not b:
+    if a is None or b is None:
         return None
-    res = Rational()
-    res.denom = a.denom * b.denom
-    res.numer = a.numer * b.denom + a.denom * b.numer
-    res.numer, res.denom = canonize(res.numer, res.denom)
+    res = create(a.numer * b.denom + a.denom * b.numer, a.denom * b.denom)
     return res
 
 def sub(a:Rational, b:Rational):
-    if not a or not b:
+    if a is None or b is None:
         return None
-    res = Rational()
-    res.denom = a.denom * b.denom
-    res.numer = a.numer * b.denom - a.denom * b.numer
-    res.numer, res.denom = canonize(res.numer, res.denom)
+    res = create(a.numer * b.denom + a.denom * b.numer, a.denom * b.denom)
     return res
 
 def mul(a:Rational, b:Rational):
-    if not a or not b:
+    if a is None or b is None:
         return None
-    res = Rational()
-    res.denom = a.denom * b.denom
-    res.numer = a.numer * b.numer
-    res.numer, res.denom = canonize(res.numer, res.denom)
+    res = create(a.numer * b.numer, a.denom * b.denom)
     return res
 
 def div(a:Rational, b:Rational):
-    if not a or not b or b.numer == 0:
+    if a is None or b is None or b.numer == 0:
         return None
-    b.numer, b.denom = canonize(b.denom, b.numer)
-    res = mul(a, b)
+    res = create(a.numer * b.denom, a.denom * b.numer)
     return res
 
 def power(r:Rational, power:int):
-    if not r or r.numer == 0:
+    if r is None:
         return None
+    res = create(r.numer ** abs(power), r.denom ** abs(power))
     if power < 0:
-        r.numer, r.denom = r.denom ** -power, r.numer ** -power
-    else:
-        r.numer **= power
-        r.denom **= power
-    r.numer, r.denom = canonize(r.numer, r.denom)
-    return r
-
-# def power_papa(r:Rational, power:int):
-#     if not r:
-#         return None
-#     r.numer **= abs(power)
-#     r.denom **= abs(power)
-#     if power < 0:
-#         r.numer, r.denom = r.denom, r.numer
-#     r.numer, r.denom = canonize(r.numer, r.denom)
-#     return r
-
+        res.numer, res.denom = res.denom, res.numer
+    return res
 
 def compare(a:Rational, b:Rational):
-    if not a or not b:
+    if a is None or b is None:
         return None
     a.numer *= b.denom
     b.numer *= a.denom
