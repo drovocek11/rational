@@ -54,7 +54,7 @@ def mul(a:Rational, b:Rational):
     return res
 
 def div(a:Rational, b:Rational):
-    if a is None or b is None or b.numer == 0:
+    if a is None or b is None:
         return None
     res = create(a.numer * b.denom, a.denom * b.numer)
     return res
