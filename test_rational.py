@@ -1,5 +1,6 @@
 import pytest
-from rational import create, to_str, to_float, add, sub, mul, div, power, to_int, compare, canonize, nod
+from rational import create, to_str, to_float, add, sub, mul, div, power, to_int, compare
+from secondary_funcs import nod, canonize
 
 @pytest.mark.parametrize("numer, denom, expected", [
     (1, 1, 1),
@@ -52,7 +53,8 @@ def test_canonical_form(numer, denom, expected):
     (0, -3, (0, 1)),
     (2, 0, None),
     (-2, 0, None),
-    (0, 0, None)
+    (0, 0, None),
+    (0, 101, (0, 1))
 ])
 def test_create(numer, denom, expected):
     r = create(numer, denom)
@@ -71,9 +73,9 @@ def test_create(numer, denom, expected):
     (0, 8, "0"),
     (-0, 8, "0"),
     (0, -8, "0"),
-    (8, 0, "None"),
-    (-8, 0, "None"),
-    (8, -0, "None")
+    (8, 0, None),
+    (-8, 0, None),
+    (8, -0, None)
 ])
 def test_to_str(numer, denom, expected):
     r = to_str(create(numer, denom))
@@ -175,7 +177,7 @@ def test_mul(first, second, expected):
 
 def test_not_a_number_ops():
     assert create(4, 0) == None
-    assert to_str(create(4, 0)) == "None"
+    assert to_str(create(4, 0)) == None
     assert to_float(create(4, 0)) == None
     assert to_int(create(4, 0)) == None
     assert add(create(4, 0), create(1, 2)) == None
@@ -232,6 +234,7 @@ def test_div(first, second, expected):
     ((-21, 0), -2, None),
     ((-21, 0), 0, None),
     ((0, 22), 0, None),
+    ((0, 8), 3, (0, 1))
 ])
 def test_power(rational, power_check, expected):
     r = power(create(rational[0], rational[1]), power_check)
